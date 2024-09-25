@@ -1,3 +1,4 @@
+import 'package:flnexpense/features/wallet/wallet_page.dart';
 import 'package:flutter/material.dart';
 
 class PersonalPage extends StatelessWidget {
@@ -18,14 +19,18 @@ class PersonalPage extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 18, fontWeight: FontWeight.w600, height: 1))
           ]),
-          const ListTile(
-            leading: Icon(Icons.account_balance_wallet, size: 36),
-            title: Text("Ví",
+          ListTile(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => const WalletPage()));
+            },
+            leading: const Icon(Icons.account_balance_wallet, size: 36),
+            title: const Text("Ví",
                 style: TextStyle(
                     fontSize: 14, fontWeight: FontWeight.w600, height: 1)),
-            subtitle: Text("Quản lý ví và đại loại thế.",
+            subtitle: const Text("Quản lý ví và đại loại thế.",
                 style: TextStyle(fontSize: 12, height: 1)),
-            trailing: Text("100.000đ"),
+            trailing: const Text("100.000đ"),
           ),
           const ListTile(
               leading: Icon(Icons.monetization_on, size: 36),

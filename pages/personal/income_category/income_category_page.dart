@@ -2,7 +2,6 @@ import 'package:flnexpense/common/colors.dart';
 import 'package:flnexpense/common/helper.dart';
 import 'package:flnexpense/common/text.dart';
 import 'package:flnexpense/services/database/database.dart';
-import 'package:flnexpense/providers/expense_category_provider.dart';
 import 'package:flnexpense/widgets/icon_picker.dart';
 import 'package:flnexpense/widgets/tile.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +9,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ExpenseCategoryPage extends HookConsumerWidget {
-  const ExpenseCategoryPage({super.key});
+import '../../../providers/income_category_provider.dart';
+
+class IncomeCategoryPage extends HookConsumerWidget {
+  const IncomeCategoryPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allExpenseCategory = ref.watch(getAllExpenseCategoryProvider).valueOrNull;
+    final allIncomeCategory =
+        ref.watch(getAllIncomeCategoryProvider).valueOrNull;
 
     final isAdding = useState(false);
     final name = useTextEditingController();
@@ -23,33 +25,41 @@ class ExpenseCategoryPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
           leading: IconButton(
-              onPressed: Navigator.of(context).pop, icon: const FaIcon(FontAwesomeIcons.arrowLeft)),
+              onPressed: Navigator.of(context).pop,
+              icon: const FaIcon(FontAwesomeIcons.arrowLeft)),
           centerTitle: true,
           title: Text(
-              "Hạng mục chi tiêu${allExpenseCategory?.isEmpty != false ? "" : " (${allExpenseCategory!.length})"}",
+              "Hạng mục thu nhập${allIncomeCategory?.isEmpty != false ? "" : " (${allIncomeCategory!.length})"}",
               style: title1)),
       body: Column(
         children: [
           Expanded(
-              child: allExpenseCategory?.isEmpty != false && !isAdding.value
-                  ? const Center(child: Text("Hãy tạo hạng mục chi tiêu đầu tiên nào."))
+              child: allIncomeCategory?.isEmpty != false && !isAdding.value
+                  ? const Center(
+                      child: Text("Hãy tạo hạng mục thu nhập đầu tiên nào."))
                   : ListView(children: [
                       if (isAdding.value)
-                        AddCategoryListTile(icon: icon, name: name, isAdding: isAdding),
-                      ...?allExpenseCategory?.map((e) => LeadingIconListTile(
-                          color: Colors.red,
+                        AddCategoryListTile(
+                            icon: icon, name: name, isAdding: isAdding),
+                      ...?allIncomeCategory?.map((e) => LeadingIconListTile(
+                          color: blue100,
                           icon: getIconDataFromStr(e.iconType, e.icon),
                           title: Text(e.name, style: title1),
                           onTap: () {
                             showDialog(
                                 context: context,
-                                builder: (_) => EditExpenseCategoryDialog(expenseCategory: e));
+                                builder: (_) => EditIncomeCategoryDialog(
+                                    incomeCategory: e));
                           },
                           trailing: IconButton(
                               onPressed: () {
-                                ref.read(expenseCategoryServiceProvider.notifier).delete(e);
+                                ref
+                                    .read(
+                                        incomeCategoryServiceProvider.notifier)
+                                    .delete(e);
                               },
-                              icon: const FaIcon(FontAwesomeIcons.xmark, color: red100))))
+                              icon: const FaIcon(FontAwesomeIcons.xmark,
+                                  color: red100))))
                     ])),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -59,7 +69,7 @@ class ExpenseCategoryPage extends HookConsumerWidget {
                     isAdding.value = true;
                   } else {
                     ref
-                        .read(expenseCategoryServiceProvider.notifier)
+                        .read(incomeCategoryServiceProvider.notifier)
                         .insert(iconData: icon.value, name: name.text)
                         .then((_) {
                       icon.value = FontAwesomeIcons.circleQuestion;
@@ -71,7 +81,11 @@ class ExpenseCategoryPage extends HookConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(isAdding.value ? FontAwesomeIcons.check : FontAwesomeIcons.plus, size: 18),
+                    Icon(
+                        isAdding.value
+                            ? FontAwesomeIcons.check
+                            : FontAwesomeIcons.plus,
+                        size: 18),
                     const SizedBox(width: 4),
                     Text(isAdding.value ? "Hoàn thành" : "Thêm hạng mục")
                   ],
@@ -83,15 +97,15 @@ class ExpenseCategoryPage extends HookConsumerWidget {
   }
 }
 
-class EditExpenseCategoryDialog extends HookConsumerWidget {
-  final ExpenseCategoryData expenseCategory;
-  const EditExpenseCategoryDialog({super.key, required this.expenseCategory});
+class EditIncomeCategoryDialog extends HookConsumerWidget {
+  final IncomeCategoryData incomeCategory;
+  const EditIncomeCategoryDialog({super.key, required this.incomeCategory});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final name = useTextEditingController(text: expenseCategory.name);
+    final name = useTextEditingController(text: incomeCategory.name);
     final focusNode = useFocusNode();
-    final icon =
-        useState<IconData>(getIconDataFromStr(expenseCategory.iconType, expenseCategory.icon));
+    final icon = useState<IconData>(
+        getIconDataFromStr(incomeCategory.iconType, incomeCategory.icon));
 
     useEffect(() {
       focusNode.requestFocus();
@@ -103,14 +117,16 @@ class EditExpenseCategoryDialog extends HookConsumerWidget {
       content: ListTile(
           leading: InkWell(
             onTap: () {
-              showDialog<IconData>(context: context, builder: (_) => const IconPickerDialog())
-                  .then((val) {
+              showDialog<IconData>(
+                  context: context,
+                  builder: (_) => const IconPickerDialog()).then((val) {
                 if (val == null) return;
                 icon.value = val;
               });
             },
             child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(16)),
                 padding: const EdgeInsets.all(12),
                 child: Icon(icon.value, color: blue100)),
           ),
@@ -132,8 +148,11 @@ class EditExpenseCategoryDialog extends HookConsumerWidget {
         TextButton(
             onPressed: () {
               ref
-                  .read(expenseCategoryServiceProvider.notifier)
-                  .update(iconData: icon.value, name: name.text, oldId: expenseCategory.id)
+                  .read(incomeCategoryServiceProvider.notifier)
+                  .update(
+                      iconData: icon.value,
+                      name: name.text,
+                      oldId: incomeCategory.id)
                   .then((_) {
                 if (context.mounted) Navigator.of(context).pop();
               });

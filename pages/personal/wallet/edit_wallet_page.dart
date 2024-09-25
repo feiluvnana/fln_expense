@@ -2,7 +2,6 @@ import 'package:flnexpense/common/colors.dart';
 import 'package:flnexpense/common/helper.dart';
 import 'package:flnexpense/common/text.dart';
 import 'package:flnexpense/services/database/database.dart';
-import 'package:flnexpense/providers/wallet_provider.dart';
 import 'package:flnexpense/widgets/icon_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,15 +9,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../providers/wallet_provider.dart';
+
 class EditWalletPage extends HookConsumerWidget {
   final WalletData wallet;
   const EditWalletPage({required this.wallet, super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final icon = useState<IconData>(getIconDataFromStr(wallet.iconType, wallet.icon));
+    final icon =
+        useState<IconData>(getIconDataFromStr(wallet.iconType, wallet.icon));
     final name = useTextEditingController(text: wallet.name);
-    final moneyAmount =
-        useTextEditingController(text: NumberFormat("#,##0đ").format(wallet.moneyAmount));
+    final moneyAmount = useTextEditingController(
+        text: NumberFormat("#,##0đ").format(wallet.moneyAmount));
 
     return Scaffold(
       backgroundColor: green100,
@@ -26,9 +28,11 @@ class EditWalletPage extends HookConsumerWidget {
           backgroundColor: green100,
           leading: IconButton(
               onPressed: Navigator.of(context).pop,
-              icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white)),
+              icon:
+                  const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white)),
           centerTitle: true,
-          title: Text("Chỉnh sửa ví", style: title1.copyWith(color: Colors.white))),
+          title: Text("Chỉnh sửa ví",
+              style: title1.copyWith(color: Colors.white))),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -51,8 +55,9 @@ class EditWalletPage extends HookConsumerWidget {
             padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                    BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16))),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Row(
                 children: [
@@ -61,7 +66,8 @@ class EditWalletPage extends HookConsumerWidget {
                   InkWell(
                     onTap: () {
                       showDialog<IconData>(
-                          context: context, builder: (_) => const IconPickerDialog()).then((val) {
+                          context: context,
+                          builder: (_) => const IconPickerDialog()).then((val) {
                         if (val == null) return;
                         icon.value = val;
                       });
@@ -76,7 +82,8 @@ class EditWalletPage extends HookConsumerWidget {
               TextFormField(
                   controller: name,
                   decoration: InputDecoration(
-                      hintText: "Tên ví", hintStyle: regular.copyWith(color: Colors.black54))),
+                      hintText: "Tên ví",
+                      hintStyle: regular.copyWith(color: Colors.black54))),
               const SizedBox(height: 80),
               FilledButton(
                   onPressed: () {
@@ -86,8 +93,8 @@ class EditWalletPage extends HookConsumerWidget {
                             oldId: wallet.id,
                             iconData: icon.value,
                             name: name.text,
-                            moneyAmount:
-                                int.parse(moneyAmount.text.replaceAll(RegExp("[^0-9]"), "")))
+                            moneyAmount: int.parse(moneyAmount.text
+                                .replaceAll(RegExp("[^0-9]"), "")))
                         .then((_) {
                       if (context.mounted) Navigator.of(context).pop();
                     });

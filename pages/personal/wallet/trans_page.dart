@@ -1,9 +1,10 @@
-import 'package:flnexpense/providers/transfer_provider.dart';
-import 'package:flnexpense/providers/wallet_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+
+import '../../../providers/transfer_provider.dart';
+import '../../../providers/wallet_provider.dart';
 
 class TransPage extends HookConsumerWidget {
   const TransPage({super.key});

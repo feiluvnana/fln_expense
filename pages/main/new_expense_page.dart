@@ -3,15 +3,16 @@ import 'package:flnexpense/common/colors.dart';
 import 'package:flnexpense/common/helper.dart';
 import 'package:flnexpense/common/text.dart';
 import 'package:flnexpense/services/database/database.dart';
-import 'package:flnexpense/providers/expense_category_provider.dart';
-import 'package:flnexpense/providers/expense_provider.dart';
-import 'package:flnexpense/providers/wallet_provider.dart';
 import 'package:flnexpense/widgets/datepicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+
+import '../../providers/expense_category_provider.dart';
+import '../../providers/expense_provider.dart';
+import '../../providers/wallet_provider.dart';
 
 class NewExpPage extends HookConsumerWidget {
   const NewExpPage({super.key});
@@ -32,8 +33,10 @@ class NewExpPage extends HookConsumerWidget {
           backgroundColor: red100,
           leading: IconButton(
               onPressed: Navigator.of(context).pop,
-              icon: const FaIcon(FontAwesomeIcons.arrowLeft, color: Colors.white)),
-          title: Text("Tạo chi tiêu mới", style: title1.copyWith(color: Colors.white)),
+              icon: const FaIcon(FontAwesomeIcons.arrowLeft,
+                  color: Colors.white)),
+          title: Text("Tạo chi tiêu mới",
+              style: title1.copyWith(color: Colors.white)),
           centerTitle: true),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,20 +60,23 @@ class NewExpPage extends HookConsumerWidget {
             padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                    BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16))),
             child: Column(children: [
               const SizedBox(height: 16),
               DropdownButtonFormField2<int>(
-                  buttonStyleData:
-                      const ButtonStyleData(height: 56, padding: EdgeInsets.only(right: 12)),
+                  buttonStyleData: const ButtonStyleData(
+                      height: 56, padding: EdgeInsets.only(right: 12)),
                   menuItemStyleData: const MenuItemStyleData(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-                  decoration:
-                      const InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 4)),
-                  dropdownStyleData:
-                      const DropdownStyleData(maxHeight: kMinInteractiveDimension * 4),
-                  iconStyleData: const IconStyleData(icon: Icon(FontAwesomeIcons.chevronDown)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+                  decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 4)),
+                  dropdownStyleData: const DropdownStyleData(
+                      maxHeight: kMinInteractiveDimension * 4),
+                  iconStyleData: const IconStyleData(
+                      icon: Icon(FontAwesomeIcons.chevronDown)),
                   items: (allWal ?? <WalletData>[])
                       .map((e) => DropdownMenuItem(
                           value: e.id,
@@ -79,8 +85,11 @@ class NewExpPage extends HookConsumerWidget {
                               SizedBox(
                                   width: 24,
                                   child: Center(
-                                      child: FaIcon(getIconDataFromStr(e.iconType, e.icon),
-                                          size: 16, color: green100))),
+                                      child: FaIcon(
+                                          getIconDataFromStr(
+                                              e.iconType, e.icon),
+                                          size: 16,
+                                          color: green100))),
                               Text(" ${e.name}"),
                             ],
                           )))
@@ -88,18 +97,21 @@ class NewExpPage extends HookConsumerWidget {
                   value: walletId.value,
                   onChanged: (val) => walletId.value = val,
                   hint: const Text("Tài khoản"),
-                  validator: (val) => val != null ? null : "Không được để trống."),
+                  validator: (val) =>
+                      val != null ? null : "Không được để trống."),
               const SizedBox(height: 16),
               DropdownButtonFormField2<int>(
-                  buttonStyleData:
-                      const ButtonStyleData(height: 56, padding: EdgeInsets.only(right: 12)),
+                  buttonStyleData: const ButtonStyleData(
+                      height: 56, padding: EdgeInsets.only(right: 12)),
                   menuItemStyleData: const MenuItemStyleData(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-                  decoration:
-                      const InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 4)),
-                  dropdownStyleData:
-                      const DropdownStyleData(maxHeight: kMinInteractiveDimension * 4),
-                  iconStyleData: const IconStyleData(icon: Icon(FontAwesomeIcons.chevronDown)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+                  decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 4)),
+                  dropdownStyleData: const DropdownStyleData(
+                      maxHeight: kMinInteractiveDimension * 4),
+                  iconStyleData: const IconStyleData(
+                      icon: Icon(FontAwesomeIcons.chevronDown)),
                   items: (allExpcat ?? <ExpenseCategoryData>[])
                       .map((e) => DropdownMenuItem(
                           value: e.id,
@@ -108,8 +120,11 @@ class NewExpPage extends HookConsumerWidget {
                               SizedBox(
                                   width: 24,
                                   child: Center(
-                                      child: FaIcon(getIconDataFromStr(e.iconType, e.icon),
-                                          size: 16, color: red100))),
+                                      child: FaIcon(
+                                          getIconDataFromStr(
+                                              e.iconType, e.icon),
+                                          size: 16,
+                                          color: red100))),
                               Text(" ${e.name}"),
                             ],
                           )))
@@ -117,12 +132,14 @@ class NewExpPage extends HookConsumerWidget {
                   value: expcatId.value,
                   onChanged: (val) => expcatId.value = val,
                   hint: const Text("Hạng mục"),
-                  validator: (val) => val != null ? null : "Không được để trống."),
+                  validator: (val) =>
+                      val != null ? null : "Không được để trống."),
               const SizedBox(height: 16),
               DatePickerFormField(controller: date),
               const SizedBox(height: 16),
               TextFormField(
-                  controller: note, decoration: const InputDecoration(hintText: "Ghi chú")),
+                  controller: note,
+                  decoration: const InputDecoration(hintText: "Ghi chú")),
               const SizedBox(height: 80),
               FilledButton(
                   onPressed: () {
@@ -130,11 +147,14 @@ class NewExpPage extends HookConsumerWidget {
                         .read(expenseServiceProvider.notifier)
                         .insert(
                             note: note.text,
-                            wallet: allWal!.firstWhere((e) => e.id == walletId.value!),
-                            expenseCategory: allExpcat!.firstWhere((e) => e.id == expcatId.value!),
-                            moneyAmount:
-                                int.parse(moneyAmount.text.replaceAll(RegExp("[^0-9]"), "")),
-                            createdAt: DateFormat("dd/MM/yyyy").parse(date.text))
+                            wallet: allWal!
+                                .firstWhere((e) => e.id == walletId.value!),
+                            expenseCategory: allExpcat!
+                                .firstWhere((e) => e.id == expcatId.value!),
+                            moneyAmount: int.parse(moneyAmount.text
+                                .replaceAll(RegExp("[^0-9]"), "")),
+                            createdAt:
+                                DateFormat("dd/MM/yyyy").parse(date.text))
                         .then((_) {
                       if (context.mounted) Navigator.of(context).pop();
                     });

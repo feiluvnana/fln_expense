@@ -1,12 +1,13 @@
 import 'package:flnexpense/common/colors.dart';
 import 'package:flnexpense/common/text.dart';
-import 'package:flnexpense/pages/personal/expense_category/expense_category_page.dart';
-import 'package:flnexpense/pages/personal/income_category/income_category_page.dart';
-import 'package:flnexpense/pages/personal/wallet/wallet_page.dart';
+import 'package:flnexpense/features/wallet/wallet_page.dart';
 import 'package:flnexpense/widgets/tile.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'expense_category/expense_category_page.dart';
+import 'income_category/income_category_page.dart';
 
 class PersonalPage extends HookConsumerWidget {
   const PersonalPage({super.key});
@@ -24,8 +25,8 @@ class PersonalPage extends HookConsumerWidget {
               child: Column(children: [
                 LeadingIconListTile(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => const WalletPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const WalletPage()));
                     },
                     color: green100,
                     title: const Text("Ví", style: title1),
@@ -38,8 +39,8 @@ class PersonalPage extends HookConsumerWidget {
                 const Divider(thickness: 0.5, height: 0.5),
                 LeadingIconListTile(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => const IncomeCategoryPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const IncomeCategoryPage()));
                     },
                     color: blue100,
                     title: const Text("Thêm hạng mục thu nhập", style: title1),
@@ -47,8 +48,8 @@ class PersonalPage extends HookConsumerWidget {
                 const Divider(thickness: 0.5, height: 0.5),
                 LeadingIconListTile(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => const ExpenseCategoryPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const ExpenseCategoryPage()));
                     },
                     color: red100,
                     title: const Text("Thêm hạng mục chi tiêu", style: title1),
